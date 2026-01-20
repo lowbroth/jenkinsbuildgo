@@ -19,6 +19,7 @@ var serverConfig *ServerConfig
 
 func main() {
 	v := viper.New()
+
 	//文件的路径如何设置
 	v.SetConfigFile("config/config.yaml")
 	fmt.Println(serverConfig)
