@@ -1,24 +1,35 @@
 package main
 
 import (
-  "fmt"
+	"fmt"
+	"github.com/spf13/viper"
 )
 
-//TIP To run your code, right-click the code and select <b>Run</b>. Alternatively, click
-// the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.
+type MysqlConfig struct {
+	Host string `mapstructure:"host"`
+	Port int    `mapstructure:"port"`
+}
+
+type ServerConfig struct {
+	ServiceName string      `mapstructure:"name"`
+	MysqlInfo   MysqlConfig `mapstructure:"mysql"`
+}
+
+var serverConfig *ServerConfig
 
 func main() {
-  //TIP Press <shortcut actionId="ShowIntentionActions"/> when your caret is at the underlined or highlighted text
-  // to see how GoLand suggests fixing it.
-  s := "gopher"
-  fmt.Println("Hello and welcome, %s!", s)
-
-  for i := 1; i <= 5; i++ {
-	//TIP You can try debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-	// for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>. To start your debugging session, 
-	// right-click your code in the editor and select the <b>Debug</b> option. 
-	fmt.Println("i =", 100/i)
-  }
+	v := viper.New()
+	//文件的路径如何设置
+	v.SetConfigFile("config/config.yaml")
+	fmt.Println(serverConfig)
+	if err := v.ReadInConfig(); err != nil {
+		panic(err)
+	}
+	if err := v.Unmarshal(&serverConfig); err != nil {
+		panic(err)
+	}
+	fmt.Println(serverConfig)
+	fmt.Printf("%V", v.Get("name"))
 }
 
 //TIP See GoLand help at <a href="https://www.jetbrains.com/help/go/">jetbrains.com/help/go/</a>.
